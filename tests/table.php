@@ -30,4 +30,4 @@ $row = new Row;
 $row->content = ['%index', '%date', '%ip', '%user_agent', '%host'];
 $table->rows[] = $row;
 
-$log->write('tabelas/b/acessos.txt', $table);
+$log->write('tabelas/acessos.txt', $table);

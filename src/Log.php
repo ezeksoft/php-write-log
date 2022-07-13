@@ -28,8 +28,8 @@ use Ezeksoft\PHPWriteLog\
 
 use function Ezeksoft\PHPWriteLog\Helper\
 { 
-	array_to_object, 	// convert array em objeto
-	permission  		// pega permissao do diretorio
+	array_to_object,	// convert array em objeto
+	permission			// pega permissao do diretorio
 };
 
 class Log
@@ -45,20 +45,20 @@ class Log
 	/**
 	 * @access public
 	 * @method write
-	 * @param String $fullpath							Caminho do arquivo
-	 * @param String|Object|Array $message $message		Texto que sera escrito
-	 * @param Array $config 							Definicoes de como sera escrito
-	 * @return String									Mensagem que foi escrita
+	 * @param String $fullpath				Caminho do arquivo
+	 * @param Mixed $message				Texto que sera escrito
+	 * @param Array $config 				Definicoes de como sera escrito
+	 * @return String						Mensagem que foi escrita
 	 * 
 	 * Se a pasta nao existir ou o arquivo, serao criados automaticamente
 	 */
 
-	public function write(String $fullpath, Object|Array|String $message, Array $config=[]) : ?String
+	public function write(String $fullpath, Mixed $message=null, Array $config=[]) : ?String
 	{
-		if (gettype($message) == 'object')
+		if (gettype($message) == 'object' || gettype($message) == 'array')
 		{
 			# nome da classe que veio no argumento
-			$message_class = get_class($message);
+			$message_class = get_class((Object) $message);
 
 			$aux = new \ReflectionClass(__CLASS__); // pega informacoes sobre a classe Log
 			$namespace = $aux->getNamespaceName(); // pega o namespace
@@ -70,9 +70,6 @@ class Log
 				$columns = $table->columns ?? []; // colunas
 				$rows = array_to_object($table->rows ?? []); // linhas da coluna
 				$message = ""; // inicaliza espaco para a mensagem
-
-				$table_header_separator = 2;	// 1 - separador de tabela nesse formato: ----------------
-												// 2 - separador de tabela nesse formato: |----|----|----|
 
 				$max_chars = []; // inicializa espaco para as colunas
 				$aux = []; // espaco para uma lista de colunas com as linhas
@@ -86,11 +83,12 @@ class Log
 				foreach ($aux as $row)
 				{
 					$row_ = $row->content ?? []; // conteudo de texto da linha
+
 					$i = 0;
 					$cells = []; // inicializa espaco para as celulas da linha
 					foreach ($row_ as $row_column) // itera as celulas da linha
 					{
-						if ($this->allow_vars) $row_column = $this->replaces_vars($row_column, compact('n'));
+						if ($this->allow_vars) $row_column = $this->replaces_vars((String) $row_column, compact('n'));
 						$cells[] = $row_column;
 
 						// se a celular que tem mais caracteres dessa coluna for menor que 
@@ -107,7 +105,7 @@ class Log
 
 				$rows = $new_rows; // atualiza linhas
 
-
+				$msg = "";
 				$i = 0; 
 				foreach ($columns as $column) // itera colunas
 				{
@@ -142,21 +140,25 @@ class Log
 					for ($j = 0; $j < $space_right; $j++) $spaces_right_str .= " ";
 
 					// monta celula
-					$message .= "|$spaces_left_str$column$spaces_right_str";
+					$msg .= "|$spaces_left_str$column$spaces_right_str";
 					$i++;
 				}
 
-				// se o separador entre o header e as linhas for do modelo 1
-				if ($table_header_separator == 1)
+				if (!empty($columns)) $msg .= "|";
+
+				if ($table->border_top)
 				{
+					// linha no header
 					$dashes = ""; // inicializa espaco para os caracteres
 					foreach ($max_chars as $char) // itera o texto das maiores celulas
 						for ($i = 0; $i < strlen($char) - 1; $i++) // itera os caracteres de cada celula
 							$dashes .= "-"; // produz tracos
 					for ($i = 0; $i < sizeof($max_chars) * 2; $i++) // itera a quantidade de celulas
 							$dashes .= "-"; // produz tracos
-					$message .= "\n$dashes"; // concatena tracos com mensagem
+					$message .= "$dashes-\n"; // concatena tracos com mensagem
 				}
+
+				$message .= $msg;
 
 				$r = 0;
 				foreach ($rows as $row) // itera linhas
@@ -205,18 +207,31 @@ class Log
 
 					// se for a primeira linha
 					// e se o separador entre o header e as linhas for do modelo 2
-					if ($r == 0 && $table_header_separator == 2) 
+					if ($r == 0) 
 					{
 						$str = "";
 						// corta a mensagem auxiliar em um array de caracteres
 						// e substitui tudo que nao for "|" por "-"
 						foreach (str_split($msg) as $char) $str .= $char == '|' ? "|" : "-";
-						$msg = $str . "\n" . $msg; // contactena separador com a primeira linha
+						$msg = $str . "|\n" . $msg; // contactena separador com a primeira linha
 					}
 
-					$message .= $msg; // adiciona nova linha na tabela com a mensagem auxiliar formatada
+					$message .= "$msg|"; // adiciona nova linha na tabela com a mensagem auxiliar formatada
 
 					$r++; // contador de linhas
+				}
+
+
+				if ($table->border_bottom)
+				{
+					// linha do footer
+					$dashes = ""; // inicializa espaco para os caracteres
+					foreach ($max_chars as $char) // itera o texto das maiores celulas
+						for ($i = 0; $i < strlen($char) - 1; $i++) // itera os caracteres de cada celula
+							$dashes .= "-"; // produz tracos
+					for ($i = 0; $i < sizeof($max_chars) * 2; $i++) // itera a quantidade de celulas
+							$dashes .= "-"; // produz tracos
+					$message .= "\n$dashes-"; // concatena tracos com mensagem
 				}
 			}
 		}
@@ -230,7 +245,7 @@ class Log
 
 
 		# Se a mensagem nao existe, usar dados da requisicao por padrao
-		if (is_null($message))
+		if ($message === true)
 		{
 			if (!empty($_REQUEST)) $message = json_encode($_REQUEST); // caso seja x-www-form-urlencoded converte o array em json
 			if (!empty($input = file_get_contents('php://input'))) $message = $input; // caso seja raw, use a string
@@ -288,7 +303,10 @@ class Log
 		# Se estamos na primeira linha e a configuracao diz para omitir a string de inicio de linha
 		if ($is_first_line === true && $skip_first_line === true) $begin = '';
 
-		if ($this->allow_vars) $message = $this->replaces_vars($message);
+		if ($this->allow_vars) $message = $this->replaces_vars((String) $message, [
+			"fullpath" => $fullpath, 
+			"n" => $this->index
+		]);
 
 		# Monta mensagem que sera escrita
 		$text = "$begin$message$end";
@@ -305,7 +323,21 @@ class Log
 		return $text;
 	}
 
-	public function replaces_vars($string, $custom=[])
+
+	/**
+	 * @deprecated 
+	 * @version 1.0
+	 * @access public
+	 * @method replaces_vars
+	 * @param String $string					Mensagem com variaveis
+	 * @param Array $custom 					Informacoes extras
+	 * @return String
+	 * 
+	 * Substitui variaveis pelo valor correspondente
+	 */
+
+	/* 
+	public function replaces_vars(String $string, Array $custom=[]) : String
 	{
 		$custom = array_to_object($custom);
 
@@ -329,6 +361,45 @@ class Log
 		$string = str_replace($vars_keys['user_agent'], $vars_values['user_agent'], $string);
 		$string = str_replace($vars_keys['date'], $vars_values['date'], $string);
 		$string = str_replace($vars_keys['host'], $vars_values['host'], $string);
+
+		return $string;
+	}
+	*/
+
+
+	/**
+	 * @version 1.1
+	 * @access public
+	 * @method replaces_vars
+	 * @param String $string					Mensagem com variaveis
+	 * @param Array $custom 					Informacoes extras
+	 * @return String
+	 * 
+	 * Substitui variaveis pelo valor correspondente
+	 */
+
+	public function replaces_vars(String $string, Array $custom=[]) : String
+	{
+		$custom = array_to_object($custom);
+
+		$vars = [
+			['key' => '%index', 'value' => $custom->n ?? 0],
+			['key' => '%ip', 'value' => $_SERVER['REMOTE_ADDR'] ?? 'NULL'],
+			['key' => '%user_agent', 'value' => $_SERVER['HTTP_USER_AGENT'] ?? 'NULL'],
+			['key' => '%date', 'value' => date('Y-m-d H:i:s')],
+			['key' => '%uniqid', 'value' => uniqid()],
+			['key' => '%host', 'value' => $_SERVER['HTTP_HOST'] ?? 'NULL'],
+			['key' => '%request.x_www_form_urlencoded', 'value' => json_encode($_REQUEST ?? [])],
+			['key' => '%request.raw', 'value' => (function($raw) { 
+				return $raw ? $raw : 'NULL'; })(file_get_contents('php://input')) ],
+			['key' => '%filepath', 'value' => $custom->fullpath ?? 'NULL'],
+		];
+
+		foreach ($vars as $var) 
+		{
+			$var = (Object) $var;
+			$string = str_replace($var->key, $var->value, $string);
+		}
 
 		return $string;
 	}

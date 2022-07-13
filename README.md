@@ -114,11 +114,11 @@ $row = new Row;
 $row->content = ['%index', '%date', '%ip', '%user_agent', '%host'];
 $table->rows[] = $row;
 
-$log->write('tabelas/b/acessos.txt', $table);
+$log->write('tabelas/acessos.txt', $table);
 ```
 
 
-Resultado em tabelas/b/acessos.txt
+Resultado em tabelas/acessos.txt
 ```
 |INDEX|       DATE        |     IP      |    USER-AGENT    |          HOST           
 |-----|-------------------|-------------|------------------|-------------------------
@@ -126,5 +126,47 @@ Resultado em tabelas/b/acessos.txt
 |  2  |2022-07-09 00:00:00|192.168.0.112|Chrome/100.0.1.155|   https://google.com    
 |  3  |    2022-07-09     |192.168.0.112|     Opera/1      |   https://reddit.com    
 |  4  |2022-07-09 05:44:38|  127.0.0.1  |    Chrome/...    |       localhost          
+
+```
+
+
+### Exemplo: adicionar linha de tabela em arquivo existente
+
+```php
+<?php 
+
+use Ezeksoft\PHPWriteLog\{Log, Table, Row};
+
+require '../src/helper.php';
+require '../src/Table.php';
+require '../src/Row.php';
+require '../src/Log.php';
+
+
+$log = new Log;
+$log->permission = 0777;
+
+$table = new Table;
+$table->load('tabelas/acessos_add_linha.txt');
+
+$row = new Row;
+$row->content = ['%index', '%date', '127.0.0.1', 'Curl', 'localhost'];
+$table->rows[] = $row;
+
+$log->write($table->file->path, $table);
+
+
+Resultado em tabelas/acessos_add_linha.txt
+```
+|INDEX|       DATE        |     IP      |    USER-AGENT    |          HOST           |
+|-----|-------------------|-------------|------------------|-------------------------|
+|  1  |2022-07-09 00:00:00| 192.168.0.1 |Firefox/100.0.1.1 |https://stackoverflow.com|
+|  2  |2022-07-09 00:00:00|192.168.0.112|Chrome/100.0.1.155|   https://google.com    |
+|  3  |    2022-07-09     |192.168.0.112|     Opera/1      |   https://reddit.com    |
+|  4  |2022-07-09 05:44:38|    NULL     |       NULL       |          NULL           |
+|  5  |2022-07-13 05:49:58|  127.0.0.1  |       Curl       |        localhost        |
+|  6  |2022-07-13 05:50:02|  127.0.0.1  |       Curl       |        localhost        |
+|  7  |2022-07-13 05:50:09|  127.0.0.1  |       Curl       |        localhost        |
+|  8  |2022-07-13 05:50:15|  127.0.0.1  |       Curl       |        localhost        |
 
 ```

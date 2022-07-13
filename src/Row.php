@@ -9,5 +9,5 @@ class Row
 	 * @var Array $content	Celulas da linha
 	 * */
 
-	public Array $content;
+	public Array $content = [];
 }
