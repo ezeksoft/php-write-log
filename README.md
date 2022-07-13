@@ -154,7 +154,7 @@ $row->content = ['%index', '%date', '127.0.0.1', 'Curl', 'localhost'];
 $table->rows[] = $row;
 
 $log->write($table->file->path, $table);
-
+```
 
 Resultado em tabelas/acessos_add_linha.txt
 ```
