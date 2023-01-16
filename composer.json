@@ -1,0 +1,14 @@
+{
+    "name": "ezeksoft/php-write-log",
+    "description": "Crie logs para debugar seu software.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ezequiel",
+            "email": "ezequielmoraesdev@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
