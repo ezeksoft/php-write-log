@@ -9,5 +9,7 @@
             "email": "ezequielmoraesdev@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^8.0"
+    }
 }
