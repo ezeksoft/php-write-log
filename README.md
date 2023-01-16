@@ -1,3 +1,8 @@
+### Instalação
+```
+composer require ezeksoft/php-write-log
+```
+
 ### Exemplo: texto simples
 
 ```php
