@@ -1,5 +1,5 @@
 <?php 
-namespace Ezeksoft\PHPWriteLog\Helper;
+namespace Ezeksoft\PHPWriteLog\Helper
 {
 
 

@@ -1,0 +1,18 @@
+0 - Data de hoje: 2023-01-31 20:27:37
+1 - Caminho do arquivo: datas/hoje.txt
+2 - Requisição com parametros []
+3 - Requisição raw NULL
+4 - User-Agent NULL
+5 - Hash: 63d979b937a46
+0 - Data de hoje: 2023-01-31 20:28:00
+1 - Caminho do arquivo: datas/hoje.txt
+2 - Requisição com parametros []
+3 - Requisição raw NULL
+4 - User-Agent NULL
+5 - Hash: 63d979d07b16f
+0 - Data de hoje: 2023-01-31 20:33:26
+1 - Caminho do arquivo: datas/hoje.txt
+2 - Requisição com parametros []
+3 - Requisição raw NULL
+4 - User-Agent NULL
+5 - Hash: 63d97b161030d
