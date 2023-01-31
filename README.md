@@ -10,7 +10,7 @@ composer require ezeksoft/php-write-log
 
 use Ezeksoft\PHPWriteLog\{Log, Table, Row};
 
-require '../src/helper.php';
+require '../src/Helper.php';
 require '../src/Table.php';
 require '../src/Row.php';
 require '../src/Log.php';
@@ -31,7 +31,7 @@ Data de hoje: 2022-07-09 06:08:24
 
 use Ezeksoft\PHPWriteLog\{Log, Table, Row};
 
-require '../src/helper.php';
+require '../src/Helper.php';
 require '../src/Table.php';
 require '../src/Row.php';
 require '../src/Log.php';
@@ -91,7 +91,7 @@ Resultado em pagamento/gateway1/compra_reembolsada.txt
 
 use Ezeksoft\PHPWriteLog\{Log, Table, Row};
 
-require '../src/helper.php';
+require '../src/Helper.php';
 require '../src/Table.php';
 require '../src/Row.php';
 require '../src/Log.php';
@@ -142,7 +142,7 @@ Resultado em tabelas/acessos.txt
 
 use Ezeksoft\PHPWriteLog\{Log, Table, Row};
 
-require '../src/helper.php';
+require '../src/Helper.php';
 require '../src/Table.php';
 require '../src/Row.php';
 require '../src/Log.php';

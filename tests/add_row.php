@@ -2,7 +2,7 @@
 
 use Ezeksoft\PHPWriteLog\{Log, Table, Row};
 
-require '../src/helper.php';
+require '../src/Helper.php';
 require '../src/Table.php';
 require '../src/Row.php';
 require '../src/Log.php';
