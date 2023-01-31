@@ -268,7 +268,7 @@ class Log
 		}
 
 		// cria pasta recursivamente
-		if (!is_dir($path)) mkdir($path, $this->permission ?? permission(__DIR__), true);
+		if (!is_dir($path)) @mkdir($path, $this->permission ?? permission(__DIR__), true);
 		# ---------------------------------------
 
 		# Configuracoes de escrita
