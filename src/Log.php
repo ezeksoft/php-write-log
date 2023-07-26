@@ -45,20 +45,20 @@ class Log
 	/**
 	 * @access public
 	 * @method write
-	 * @param String $fullpath				Caminho do arquivo
-	 * @param Mixed $message				Texto que sera escrito
-	 * @param Array $config 				Definicoes de como sera escrito
-	 * @return String						Mensagem que foi escrita
+	 * @param string $fullpath				Caminho do arquivo
+	 * @param mixed $message				Texto que sera escrito
+	 * @param array $config 				Definicoes de como sera escrito
+	 * @return string						Mensagem que foi escrita
 	 * 
 	 * Se a pasta nao existir ou o arquivo, serao criados automaticamente
 	 */
 
-	public function write(String $fullpath, Mixed $message=null, Array $config=[]) : ?String
+	public function write(string $fullpath, mixed $message=null, array $config=[]) : ?string
 	{
 		if (gettype($message) == 'object' || gettype($message) == 'array')
 		{
 			# nome da classe que veio no argumento
-			$message_class = get_class((Object) $message);
+			$message_class = get_class((object) $message);
 
 			$aux = new \ReflectionClass(__CLASS__); // pega informacoes sobre a classe Log
 			$namespace = $aux->getNamespaceName(); // pega o namespace
@@ -73,7 +73,7 @@ class Log
 
 				$max_chars = []; // inicializa espaco para as colunas
 				$aux = []; // espaco para uma lista de colunas com as linhas
-				$aux[] = (Object) ["content" => $columns];  // cria um array com as colunas
+				$aux[] = (object) ["content" => $columns];  // cria um array com as colunas
 				foreach ($rows as $row) $aux[] = $row; // injeta linhas no array que contem as colunas
 				
 				$new_rows = []; // inicializa espaco para na lista de linhas formatada
@@ -371,14 +371,14 @@ class Log
 	 * @version 1.1
 	 * @access public
 	 * @method replaces_vars
-	 * @param String $string					Mensagem com variaveis
-	 * @param Array $custom 					Informacoes extras
-	 * @return String
+	 * @param string $string					Mensagem com variaveis
+	 * @param array $custom 					Informacoes extras
+	 * @return string
 	 * 
 	 * Substitui variaveis pelo valor correspondente
 	 */
 
-	public function replaces_vars(String $string, Array $custom=[]) : String
+	public function replaces_vars(string $string, array $custom=[]) : string
 	{
 		$custom = array_to_object($custom);
 
@@ -397,7 +397,7 @@ class Log
 
 		foreach ($vars as $var) 
 		{
-			$var = (Object) $var;
+			$var = (object) $var;
 			$string = str_replace($var->key, $var->value, $string);
 		}
 
